@@ -31,6 +31,15 @@
     </item>
     
     <item>
+      <title>Git</title>
+      <link>https://astromechza.github.io/tags/git/</link>
+      <pubDate>Thu, 12 Jul 2018 09:00:00 +0100</pubDate>
+      
+      <guid>https://astromechza.github.io/tags/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Ipvs</title>
       <link>https://astromechza.github.io/tags/ipvs/</link>
       <pubDate>Fri, 29 Jun 2018 21:23:26 +0100</pubDate>
@@ -63,6 +72,15 @@
       <pubDate>Sat, 21 Apr 2018 21:23:26 +0100</pubDate>
       
       <guid>https://astromechza.github.io/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Semver</title>
+      <link>https://astromechza.github.io/tags/semver/</link>
+      <pubDate>Thu, 12 Jul 2018 09:00:00 +0100</pubDate>
+      
+      <guid>https://astromechza.github.io/tags/semver/</guid>
       <description></description>
     </item>
     
