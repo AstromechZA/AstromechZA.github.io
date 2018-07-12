@@ -102,7 +102,7 @@
 
 <p>There is no right answer that fits all software projects, <a href="https://semver.org/">Semantic Versioning</a> is an attempt at this, but often doesn&rsquo;t fit well for large projects that may have a release cycle as long as 3-6 (even 12) months for a new version (eg: Android, iOS, Windows, etc).</p>
 
-<p>However SemVer can work <em>very</em> well for small libraries and distributables for which the MAJOR.MINOR.PATCH archetype describes changes in the project very well. It&rsquo;s an obvious choice for languages like Python, who&rsquo;s packaging mechanism requires a version number.</p>
+<p>However SemVer can work <em>very</em> well for small libraries and distributables for which the <code>MAJOR.MINOR.PATCH</code> archetype describes changes in the project very well. It&rsquo;s an obvious choice for languages like Python, who&rsquo;s packaging mechanism requires a version number.</p>
 
 <p>This post will mostly be concerned with small projects that may be distributed to an audience in which version numbers have some meaning.</p>
 
@@ -127,9 +127,9 @@
 
 <p>The first stop was just baking the version into the project files as <code>1.0.0</code> and never adjusting it <em>since I didn&rsquo;t have an audience concerned with the version</em>.</p>
 
-<p>Then as I learnt about SemVer and saw it used in more places I began using it and attempting to remember to adjust the version file at fairly regular intervals. I only ever bumped the MINOR component (the second digit) and generally did so either too often or with no respect to the real SemVer spec.</p>
+<p>Then as I learnt about SemVer and saw it used in more places I began using it and attempting to remember to adjust the version file at fairly regular intervals. I only ever bumped the <code>MINOR</code> component (the second digit) and generally did so either too often or with no respect to the real SemVer spec.</p>
 
-<p>In some projects I used just 2 digits of semver (MAJOR.MINOR) since I was never using the third digit!</p>
+<p>In some projects I used just 2 digits of semver (<code>MAJOR.MINOR</code>) since I was never using the third digit!</p>
 
 <p>I still kept having silly events where I&rsquo;d intend to fix a bug or add a feature and yet I hadn&rsquo;t bumped the version number which often played havok with CI pipelines overwriting artifacts when not intended. I&rsquo;d then have to go back and add a new commit with the bumped version info.</p>
 
@@ -143,7 +143,7 @@
 <li>If your Git provider supports it, protect the tag pattern <code>v\d+\.\d+\.\d+</code> so that it can only be used on master and can only be pushed by certain users.</li>
 </ul>
 
-<p>This made managing the version pretty nice but still presented the problem in my projects that I&rsquo;d never end up updating the PATCH/BUILD number (the 3rd digit).</p>
+<p>This made managing the version pretty nice but still presented the problem in my projects that I&rsquo;d never end up updating the <code>PATCH</code>/<code>BUILD</code> number (the 3rd digit).</p>
 
 <p>This brings us to my current preferred way of doing version managment. <strong>Forewarning: it uses a lot of Git</strong>.</p>
 
@@ -154,24 +154,26 @@
 <ul>
 <li>Use Git tags to store the 2 digit version tag (<code>v1.2</code>)</li>
 <li>The version of any commit, is the most recent, and highest version tag found for any parent commit on the master branch</li>
-<li>The 3rd number (the PATCH or BUILD) is calculated as the distance in &ldquo;merge&rdquo; commits since the version tag (this can be relaxed to be any type of commits if you&rsquo;re not using merge commits)</li>
+<li>The 3rd number (the PATCH or BUILD) is <em>dynamically</em> calculated as the distance in &ldquo;merge&rdquo; commits since the version tag (this can be relaxed to be any type of commits if you&rsquo;re not using merge commits)</li>
 <li>Add a <code>-devX</code> suffix if Git is not clean, or the distance to the last parent commit on the master branch is &gt; 0</li>
 </ul>
 
-<h3 id="how-it-s-used-in-a-project">How it&rsquo;s used in a project:</h3>
+<p><strong>Note:</strong> A &ldquo;merge&rdquo; commit is one which has more than one parent. Usually as a result of a <code>git merge</code> or something.</p>
+
+<h3 id="how-it-s-implemented-in-a-project">How it&rsquo;s implemented in a project</h3>
 
 <p>In some crazy world you could get away with implementing this in a <code>Makefile</code>. However, this is not that world so I prefer to write it as a broadly compatible Python script that a <code>Makefile</code> can call if necessary.</p>
 
 <p><a name="code"></a>
 <script src="https://gist.github.com/AstromechZA/91d724c3601b1f32ce8060169d797560.js"></script></p>
 
-<p>You can then use the <code>ver.py</code> file to access the version number when you need it during build and deployment. An example of the version trends may be:</p>
+<p>You can then use the <code>ver.py</code> file to access the version number when you need it during build and deployment. An example of the version progression may be:</p>
 
 <pre><code>$ for r in $(git rev-list HEAD); do git --no-pager show $r -s --oneline; python ver.py $r; done
 365a400 (HEAD -&gt; feature-D) My most recent commit
-0.0.14-dev1
-3789ecb (origin/master, master) Merge feature-C to master
-0.0.14
+0.1.0-dev1
+3789ecb (origin/master, master, v0.1) Merge feature-C to master
+0.1.0
 f00386a (origin/feature-B) Work on feature C
 0.0.13-dev1
 37b46ef Merge feature-B to master
@@ -187,11 +189,24 @@ ba544ba Merge feature-A to master
 
 <p>It&rsquo;s a good idea to only deploy new artifacts when you&rsquo;re sure your building the release branch and that the version number has no <code>-devX</code> suffix indicating unmerged changes.</p>
 
-<h3 id="possibly-additions-and-extensions">Possibly additions and extensions</h3>
+<p>In a Python project, you could access and use the version number as follows in your <code>setup.py</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> imp 
+<span style="color:#f92672">import</span> os
+<span style="color:#f92672">from</span> setuptools <span style="color:#f92672">import</span> setup, find_packages
+
+<span style="color:#75715e"># you could run it via subprocess but this avoids the fork</span>
+version <span style="color:#f92672">=</span> imp<span style="color:#f92672">.</span>load_source(<span style="color:#e6db74">&#39;version&#39;</span>, os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(__file__, <span style="color:#e6db74">&#39;../ver.py&#39;</span>))
+
+setup(
+    <span style="color:#75715e"># ...</span>
+    version<span style="color:#f92672">=</span>version<span style="color:#f92672">.</span>get_version(),
+    <span style="color:#75715e"># ...</span>
+)</code></pre></div>
+<h3 id="possible-additions-and-extensions">Possible additions and extensions</h3>
 
 <ul>
 <li>Always add <code>-devX</code> when you&rsquo;re not on the release branch</li>
-<li>When adding the <code>-devX</code> suffix, bump the PATCH digit in preperation for a new version (so that 1.2.3 &lt; 1.2.4-dev &lt; 1.2.4)</li>
+<li>When adding the <code>-devX</code> suffix, bump the <code>PATCH</code> digit in preperation for a new version (so that <code>1.2.3</code> &lt; <code>1.2.4-dev</code> &lt; <code>1.2.4</code>)</li>
 <li>Add a command to bump the minor or major versions (publish a new git tag based on the last one)</li>
 </ul>
 
