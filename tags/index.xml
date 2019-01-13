@@ -31,11 +31,38 @@
     </item>
     
     <item>
+      <title>Devdiary</title>
+      <link>https://astromechza.github.io/tags/devdiary/</link>
+      <pubDate>Sun, 13 Jan 2019 09:00:00 +0100</pubDate>
+      
+      <guid>https://astromechza.github.io/tags/devdiary/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Finance</title>
+      <link>https://astromechza.github.io/tags/finance/</link>
+      <pubDate>Sun, 13 Jan 2019 09:00:00 +0100</pubDate>
+      
+      <guid>https://astromechza.github.io/tags/finance/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Git</title>
       <link>https://astromechza.github.io/tags/git/</link>
       <pubDate>Thu, 12 Jul 2018 09:00:00 +0100</pubDate>
       
       <guid>https://astromechza.github.io/tags/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Golang</title>
+      <link>https://astromechza.github.io/tags/golang/</link>
+      <pubDate>Sun, 13 Jan 2019 09:00:00 +0100</pubDate>
+      
+      <guid>https://astromechza.github.io/tags/golang/</guid>
       <description></description>
     </item>
     
@@ -72,6 +99,15 @@
       <pubDate>Sun, 12 Aug 2018 09:00:00 +0100</pubDate>
       
       <guid>https://astromechza.github.io/tags/monitoring/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Plaintext</title>
+      <link>https://astromechza.github.io/tags/plaintext/</link>
+      <pubDate>Sun, 13 Jan 2019 09:00:00 +0100</pubDate>
+      
+      <guid>https://astromechza.github.io/tags/plaintext/</guid>
       <description></description>
     </item>
     
